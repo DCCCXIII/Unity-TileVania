@@ -1,7 +1,5 @@
 fileFormatVersion: 2
 guid: 135c7cd893ca50849b81c61a26ecaef5
-timeCreated: 1530165169
-licenseType: Pro
 TextureImporter:
   fileIDToRecycleName:
     21300000: SPA_Player_Default_0
@@ -33,7 +31,7 @@ TextureImporter:
     21300052: SPA_Player_Default_26
     21300054: SPA_Player_Default_27
     21300056: SPA_Player_Default_28
-    21300058: SPA_Player_Default_29
+    21300058: SPA_Player_Default_28
   externalObjects: {}
   serializedVersion: 4
   mipmaps:
@@ -506,26 +504,12 @@ TextureImporter:
       name: SPA_Player_Default_28
       rect:
         serializedVersion: 2
-        x: 367
-        y: 109
-        width: 5
-        height: 2
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-    - serializedVersion: 2
-      name: SPA_Player_Default_29
-      rect:
-        serializedVersion: 2
         x: 342
         y: 6
         width: 29
         height: 32
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
