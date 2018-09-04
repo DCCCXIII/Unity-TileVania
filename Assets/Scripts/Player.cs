@@ -12,11 +12,13 @@ public class Player : MonoBehaviour {
 
     // State
     public bool isAlive = true;
+    public bool isGrounded;
 
     // Component references
     private Rigidbody2D myRigidbody;
     private Animator myAnimator;
     private Collider2D myCollider;
+    private Collider2D feetCollider;
     float horizontalInput;
     float verticalInput;
 
@@ -24,8 +26,8 @@ public class Player : MonoBehaviour {
     void Start () {
         myRigidbody = GetComponent<Rigidbody2D>();
         myAnimator = GetComponent<Animator>();
-        myCollider = GetComponent<Collider2D>();
-
+        myCollider = GetComponent<BoxCollider2D>();
+        feetCollider = GetComponent<CapsuleCollider2D>();
     }
 	
 	// Update is called once per frame
@@ -33,6 +35,9 @@ public class Player : MonoBehaviour {
     {
         verticalInput = CrossPlatformInputManager.GetAxis("Vertical");
         horizontalInput = CrossPlatformInputManager.GetAxis("Horizontal");
+
+        isGrounded = feetCollider.IsTouchingLayers(LayerMask.GetMask("Ground"));
+
         Run();
         Jump();
         ClimbLadder();
@@ -42,10 +47,11 @@ public class Player : MonoBehaviour {
     {
         bool isMovingHorizontaly = horizontalInput < -0.1f || horizontalInput > 0.1f;
 
+        myRigidbody.velocity = new Vector2(horizontalInput * speed, myRigidbody.velocity.y);
+
         // Moves player character left or right
         if (isMovingHorizontaly)
         {
-            myRigidbody.velocity = new Vector2(horizontalInput * speed, myRigidbody.velocity.y);
             myAnimator.SetBool("Running", true);
 
             // Flips sprite on the direction of movement
@@ -59,7 +65,7 @@ public class Player : MonoBehaviour {
 
     private void Jump()
     {
-        if (CrossPlatformInputManager.GetButtonDown("Jump") && myCollider.IsTouchingLayers(LayerMask.GetMask("Ground")))
+        if (CrossPlatformInputManager.GetButtonDown("Jump") && isGrounded)
         {
             myRigidbody.velocity = new Vector2(myRigidbody.velocity.x, +jump);
         }
