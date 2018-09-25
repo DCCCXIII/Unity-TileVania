@@ -4,51 +4,35 @@ using UnityEngine;
 
 public class Enemy : MonoBehaviour {
 
-    [SerializeField] float speed = 1.0f;
+    [SerializeField] float mySpeed = 1.0f;
 
     public bool isMovingLeft = false;
 
-    private Rigidbody2D myRigidbody;
-    private Collider2D myCollider;
-    private Collider2D sidesCollider;
+    private Rigidbody2D myRigidBody;
 
-	// Use this for initialization
-	void Start () {
-        myCollider = GetComponent<CircleCollider2D>();
-        myRigidbody = GetComponent<Rigidbody2D>();
-        sidesCollider = GetComponent<BoxCollider2D>();
-	}
-	
-	// Update is called once per frame
-	void Update ()
+    void Start()
     {
-        Move();
-        ToggleIsMovingLeft();
+        myRigidBody = GetComponent<Rigidbody2D>();
     }
 
-    private void Move()
+    // Update is called once per frame
+    void Update()
     {
-        if (!isMovingLeft)
+        if (IsFacingRight())
         {
-            myRigidbody.velocity = new Vector2(speed * Time.deltaTime, myRigidbody.velocity.y);
-        } else if (isMovingLeft)
-        {
-            myRigidbody.velocity = new Vector2(speed * Time.deltaTime * -1, myRigidbody.velocity.y);
+            myRigidBody.velocity = new Vector2(mySpeed, 0f);
         }
-
+        else
+        {
+            myRigidBody.velocity = new Vector2(-mySpeed, 0f);
+        }
     }
-
-    private void ToggleIsMovingLeft()
+    bool IsFacingRight()
     {
-        if (sidesCollider.IsTouchingLayers(LayerMask.GetMask("Ground")))
-        {
-            if (isMovingLeft)
-            {
-                isMovingLeft = false;
-            } else if (!isMovingLeft)
-            {
-                isMovingLeft = true;
-            }
-        }
+        return transform.localScale.x > 0;
+    }
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        transform.localScale = new Vector2(-(Mathf.Sign(myRigidBody.velocity.x)), 1f);
     }
 }
