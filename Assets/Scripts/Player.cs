@@ -9,6 +9,7 @@ public class Player : MonoBehaviour {
     [SerializeField] float speed = 2f;
     [SerializeField] float jump = 2f;
     [SerializeField] float climbSpeed = 2;
+    [SerializeField] Vector2 deathKick = new Vector2(25f, 25f);
 
     // State
     public bool isAlive = true;
@@ -17,7 +18,7 @@ public class Player : MonoBehaviour {
     // Component references
     private Rigidbody2D myRigidbody;
     private Animator myAnimator;
-    private Collider2D myCollider;
+    private Collider2D myBodyCollider;
     private Collider2D feetCollider;
     float horizontalInput;
     float verticalInput;
@@ -26,13 +27,15 @@ public class Player : MonoBehaviour {
     void Start () {
         myRigidbody = GetComponent<Rigidbody2D>();
         myAnimator = GetComponent<Animator>();
-        myCollider = GetComponent<BoxCollider2D>();
+        myBodyCollider = GetComponent<BoxCollider2D>();
         feetCollider = GetComponent<CapsuleCollider2D>();
     }
 	
 	// Update is called once per frame
 	void Update ()
     {
+        if(!isAlive) { return; }
+
         verticalInput = CrossPlatformInputManager.GetAxis("Vertical");
         horizontalInput = CrossPlatformInputManager.GetAxis("Horizontal");
 
@@ -41,6 +44,7 @@ public class Player : MonoBehaviour {
         Run();
         Jump();
         ClimbLadder();
+        Die();
     }
 
     private void Run()
@@ -74,7 +78,7 @@ public class Player : MonoBehaviour {
     private void ClimbLadder()
     {
 
-        if (!myCollider.IsTouchingLayers(LayerMask.GetMask("Ladder")))
+        if (!myBodyCollider.IsTouchingLayers(LayerMask.GetMask("Ladder")))
         {
             myRigidbody.gravityScale = 1;
             myAnimator.SetBool("Climbing", false);
@@ -85,6 +89,16 @@ public class Player : MonoBehaviour {
         myRigidbody.gravityScale = 0;
         myAnimator.SetBool("Climbing", true);
 
+    }
+
+    private void Die()
+    {
+        if (myBodyCollider.IsTouchingLayers(LayerMask.GetMask("Enemy")))
+        {
+            myAnimator.SetTrigger("Dying");
+            GetComponent<Rigidbody2D>().velocity = deathKick;
+            isAlive = false;
+        }
     }
     
 }
